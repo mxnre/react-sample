@@ -1,0 +1,117 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2.19.00
+
+workflows:
+  version: 2
+  my-workflow:
+    jobs:
+      - build:
+          context:
+            - GCP
+
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:10.16.0
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: rm -rf ./node_modules
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      # run tests!
+      - run: yarn test
+
+      # deploy!
+      - run:
+          name: deploy app
+          working_directory: ~/repo
+          command: |
+            if [ ! "${CIRCLE_BRANCH}" == "master" ]; then
+              echo "No need to deploy"
+            else
+              ############################################
+              #   GCP
+              ############################################
+
+              sudo apt-get -y -qq update
+              sudo apt-get install apt-transport-https ca-certificates gnupg
+              echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+              curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+              sudo apt-get -y -qq update
+              sudo apt-get install google-cloud-sdk
+
+              echo ${GCP_PROJECT_KEY} | base64 --decode --ignore-garbage | sudo tee -a $HOME/gcloud-service-key.json
+              gcloud auth activate-service-account --key-file $HOME/gcloud-service-key.json
+
+              gcloud config set project $GCP_PROJECT_ID
+
+              echo 'export REACT_APP_DEPLOY_HOST="varunacl"' >> $BASH_ENV
+              cat $BASH_ENV
+              source $BASH_ENV
+              yarn build
+
+              MAIN_BUCKET_NAME="gs://console.varunaiot.com"
+              gsutil -m rsync -r ./build $MAIN_BUCKET_NAME
+
+              # echo 'export REACT_APP_DEPLOY_HOST="varunaview"' >> $BASH_ENV
+              # cat $BASH_ENV
+              # source $BASH_ENV
+              # yarn build
+
+              # MAIN_BUCKET_NAME="gs://varunaview.com"
+              # gsutil -m rsync -r ./build $MAIN_BUCKET_NAME
+
+              ############################################
+              #   AWS
+              ############################################
+
+              if false; then
+                MAIN_BUCKET_NAME="s3://varuna-frontend-app"
+                CL_BUCKET_NAME="s3://varunacl-frontend-app"
+                BUCKET_REGION="us-east-2"
+
+                sudo apt-get -y -qq update
+                sudo apt-get install python-pip python-dev build-essential
+                sudo pip install awscli --upgrade
+
+                echo 'export REACT_APP_DEPLOY_HOST="varunaview"' >> $BASH_ENV
+                cat $BASH_ENV
+                source $BASH_ENV
+                yarn build
+                aws s3 rm $MAIN_BUCKET_NAME --recursive
+                aws s3 sync ./build $MAIN_BUCKET_NAME --region $BUCKET_REGION
+
+                echo 'export REACT_APP_DEPLOY_HOST="varunacl"' >> $BASH_ENV
+                cat $BASH_ENV
+                source $BASH_ENV
+                yarn build
+                aws s3 rm $CL_BUCKET_NAME --recursive
+                aws s3 sync ./build $CL_BUCKET_NAME --region $BUCKET_REGION
+              fi
+            fi

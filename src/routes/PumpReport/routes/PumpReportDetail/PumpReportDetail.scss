@@ -1,0 +1,23 @@
+@import 'styles/variables';
+
+.PumpReportDetail {
+  font-size: 1.5em;
+
+  &__field {
+    color: $blue;
+  }
+
+  &__value {
+    color: $green;
+  }
+
+  &__Chart {
+    height: 20em;
+  }
+
+  &__Last-hours {
+    z-index: 9;
+    right: 2em;
+    top: 2em;
+  }
+}

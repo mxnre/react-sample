@@ -1,0 +1,21 @@
+.PumpReportNew {
+  &__Header {
+    line-height: 1;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid white;
+    background-color: #eee;
+  }
+
+  &__Time {
+    border-right: 1px solid white;
+    background-color: #eee;
+    text-align: center;
+  }
+
+  &__Cell {
+    border: 1px solid #eee;
+  }
+}

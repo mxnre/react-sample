@@ -1,0 +1,71 @@
+@import 'styles/variables';
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Chettan+2&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+Chettan+2:wght@400;500&display=swap');
+
+.WeeklyReport {
+  font-family: 'Baloo Chettan 2', cursive;
+
+  &__chemical-picker {
+    max-width: 10em;
+    margin: auto;
+    margin-bottom: 1rem;
+  }
+
+  &__body {
+    max-width: 700px;
+  }
+
+  &__logo {
+    width: 2em;
+    height: auto;
+  }
+
+  &__title {
+    font-size: 2em;
+    line-height: 1.2;
+  }
+
+  &__last-week {
+    font-size: 1.5em;
+  }
+
+  &__value {
+    font-weight: 500;
+    font-size: 2em;
+  }
+
+  &__unit {
+    font-size: 1.5em;
+  }
+
+  &__print-button {
+    font-family: inherit;
+
+    @media print {
+      visibility: hidden;
+    }
+  }
+
+  @media print {
+    position: fixed !important;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: $spacer * 5;
+    z-index: 9999;
+
+    &__chemical-picker {
+      display: none;
+    }
+
+    &__body {
+      max-width: none;
+    }
+
+    &__tile {
+      flex: 0 0 33.33% !important;
+      max-width: 33.33% !important;
+    }
+  }
+}

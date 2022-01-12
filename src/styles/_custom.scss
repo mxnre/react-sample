@@ -1,0 +1,25 @@
+.row.card-row {
+  margin: -$spacer * 0.5;
+
+  > div {
+    padding-top: $spacer * 0.5;
+    padding-bottom: $spacer * 0.5;
+  }
+}
+
+.absolute-full-parent {
+  display: flex;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+}
+
+.row-spacer {
+  margin: -$spacer * 0.5;
+}
+
+.col-spacer {
+  padding: $spacer * 0.5;
+}

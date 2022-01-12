@@ -1,0 +1,58 @@
+.btn {
+  align-items: center;
+  font-weight: bold;
+  border-radius: 0.5rem;
+  font-size: small;
+  font-family: $font-family-base;
+}
+
+a.btn[type='button'] {
+  appearance: none;
+}
+
+.form-control {
+  font-size: small;
+}
+
+.navbar {
+  padding: 1rem;
+}
+
+.card {
+  box-shadow: $box-shadow-sm;
+}
+
+input[type='text'] {
+  border-radius: 0.5rem;
+  border-color: $component-grey-border;
+}
+
+.tab-content {
+  position: relative;
+  top: -1px;
+}
+
+.nav-item[role='tab'] {
+  &.active {
+    background-color: white;
+    border-color: #cccdd0;
+    border-bottom: 1px solid white;
+    border-top-left-radius: 0.5em;
+    border-top-right-radius: 0.5em;
+    z-index: 1;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:not(.active):hover {
+    background-color: #fff5;
+    border-top-left-radius: 0.5em;
+    border-top-right-radius: 0.5em;
+  }
+}
+
+@page {
+  margin: 0;
+}
