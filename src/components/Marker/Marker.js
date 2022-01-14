@@ -43,6 +43,7 @@ const Marker = ({ className, type, value, onClick }) => {
     return (
       <div className={cn('Marker', className)} onClick={onClick}>
         <Icon />
+        <p>maker</p>
       </div>
     )
   }
