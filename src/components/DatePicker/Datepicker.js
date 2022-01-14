@@ -68,7 +68,6 @@ function Datepicker(props) {
         popperPlacement="bottom-end"
         ref={calendarRef}
       />
-      <p>datepicker</p>
     </div>
   )
 }
